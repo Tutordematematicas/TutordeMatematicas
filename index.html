@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor de Matemáticas</title>
+    <link rel="stylesheet" href="estilo.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ===== INICIO DE SESIÓN Y PANTALLA DE ESPERA ===== -->
+<div id="tl-root" role="dialog" aria-modal="true" aria-label="Ingreso a Tutor de Matemáticas">
+
+    <!-- Ingreso -->
+    <main class="tl-card" id="tl-login">
+        <header class="main-header">
+            <span class="mascot" id="tl-owl">🦉</span>
+            <h1>Tutor de Matemáticas</h1>
+            <span class="mascot">🌻</span>
+        </header>
+        <div class="tl-body">
+            <p class="tl-bubble" id="tl-bubble" aria-live="polite">¡Hola! Dime quién eres.</p>
+            <div class="tl-tabs" role="tablist">
+                <button type="button" class="tl-tab" role="tab" id="tl-tab-in" aria-selected="true">Entrar</button>
+                <button type="button" class="tl-tab" role="tab" id="tl-tab-up" aria-selected="false">Crear cuenta</button>
+            </div>
+            <form id="tl-form" novalidate>
+                <div class="tl-field">
+                    <label for="tl-user">Mi nombre de usuario</label>
+                    <input class="tl-input" id="tl-user" autocomplete="username" maxlength="15" placeholder="Ej: ana2015">
+                </div>
+                <div class="tl-field">
+                    <label for="tl-pass">Mi contraseña</label>
+                    <div class="tl-wrap">
+                        <input class="tl-input" id="tl-pass" type="password" autocomplete="current-password" maxlength="20" placeholder="Mínimo 4 caracteres">
+                        <button type="button" class="tl-eye" id="tl-eye" aria-label="Mostrar contraseña">👁️</button>
+                    </div>
+                </div>
+                <p class="tl-err" id="tl-err" role="alert"></p>
+                <button class="tl-btn" id="tl-submit" type="submit">¡Entrar!</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Espera antes de jugar -->
+    <section class="tl-card" id="tl-wait" hidden>
+        <header class="main-header">
+            <span class="mascot">🦉</span>
+            <h1>¡Hola, <span id="tl-hello"></span>!</h1>
+            <span class="mascot">🌻</span>
+        </header>
+        <div class="tl-body">
+            <div class="tl-plant" id="tl-plant" aria-hidden="true">🌰</div>
+            <div class="tl-bar" role="progressbar" aria-label="Preparando el juego" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="tl-pb"><div id="tl-fill"></div></div>
+            <p class="tl-step" id="tl-step" aria-live="polite">Despertando al búho…</p>
+            <button class="tl-btn go" id="tl-go" type="button" hidden>▶ ¡Empieza a jugar!</button>
+            <button class="tl-link" id="tl-switch" type="button">No soy yo, cambiar de usuario</button>
+        </div>
+    </section>
+</div>
+
+<div class="app-container">
+
+    <header class="main-header">
+        <span class="mascot">🦉</span>
+        <h1>Tutor de Matemáticas</h1>
+        <span class="mascot">🌻</span>
+    </header>
+
+    <main class="main-content">
+
+        <!-- MENÚ LATERAL + PLANTA DE PROGRESO -->
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-view="inicio">🏠 Inicio</button>
+                <button class="nav-btn" data-view="aprende">📚 Aprende</button>
+                <button class="nav-btn" data-view="retos">🏆 Retos</button>
+                <button class="nav-btn" data-view="juegos">🎮 Juegos</button>
+            </nav>
+
+            <div class="user-card">
+                <span id="user-name">👤</span>
+                <button class="btn-small" id="btn-salir" type="button">Salir</button>
+            </div>
+
+            <div class="plant-card">
+                <div id="plant">🌱</div>
+                <p>Mi planta crece con cada acierto</p>
+                <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+                <strong id="progress-text">0/10</strong>
+            </div>
+        </aside>
+
+        <section class="game-area">
+
+            <!-- INICIO: JUEGO POR TEMAS CON CRONÓMETRO -->
+            <div id="view-inicio" class="view-panel active">
+                <div class="topic-bar">
+                    <button class="btn-topic active" data-topic="sumas">+ Sumas</button>
+                    <button class="btn-topic" data-topic="restas">− Restas</button>
+                    <button class="btn-topic" data-topic="mult">× Multiplicaciones</button>
+                </div>
+
+                <div class="mode-bar">
+                    <span>Velocidad:</span>
+                    <button class="btn-mode active" data-mode="0">🐢 Fácil</button>
+                    <button class="btn-mode" data-mode="1">🐇 Medio</button>
+                    <button class="btn-mode" data-mode="2">🐆 Difícil (rápido)</button>
+                </div>
+
+                <div class="timer-row">
+                    <span id="level-badge">🐢 Fácil</span>
+                    <div class="timer-track"><div id="timer-fill"></div></div>
+                    <span id="timer-text">20 s</span>
+                </div>
+
+                <div class="question-title" id="question-text"></div>
+
+                <div class="fruits-visualiser">
+                    <div class="fruit-group" id="fruit-group-1"></div>
+                    <div class="math-operator" id="operator-display">+</div>
+                    <div class="fruit-group" id="fruit-group-2"></div>
+                </div>
+
+                <div class="options-container" id="options-container"></div>
+                <p class="feedback" id="feedback" aria-live="polite"></p>
+
+                <div class="stats-bar">
+                    Vidas: <strong id="lives-display">❤️❤️❤️</strong> |
+                    Puntos: <strong id="score-display">0</strong> |
+                    Racha: <strong id="streak-display">🔥 0</strong> |
+                    Tiempo por pregunta: <strong id="limit-display">20 s</strong>
+                </div>
+
+                <!-- PANTALLA DE PERDISTE -->
+                <div id="gameover" class="gameover" hidden>
+                    <div class="gameover-logos">💔 😵 🌧️</div>
+                    <h2>¡Perdiste!</h2>
+                    <p>Lograste <strong id="final-score">0</strong> puntos</p>
+                    <p>¡No te rindas, cada intento te hace más fuerte! 💪</p>
+                    <button class="btn-volver" id="btn-volver">🔄 Volver</button>
+                </div>
+            </div>
+
+            <!-- APRENDE: EJERCICIOS POR GRADO (1° A 5°) -->
+            <div id="view-aprende" class="view-panel">
+                <h2>📚 Aprende por grados</h2>
+                <div class="topic-bar">
+                    <button class="btn-grade active" data-grade="1">1°</button>
+                    <button class="btn-grade" data-grade="2">2°</button>
+                    <button class="btn-grade" data-grade="3">3°</button>
+                    <button class="btn-grade" data-grade="4">4°</button>
+                    <button class="btn-grade" data-grade="5">5°</button>
+                </div>
+                <p class="lesson" id="grade-info"></p>
+                <button class="btn-small" id="btn-listen">🔊 Escuchar</button>
+                <div class="question-title" id="aprende-question"></div>
+                <div class="fruits-visualiser" id="aprende-visual"></div>
+                <div class="options-container" id="aprende-options"></div>
+                <p class="feedback" id="aprende-feedback" aria-live="polite"></p>
+                <button class="btn-small" id="btn-next" hidden>Siguiente ➜</button>
+                <div class="stats-bar">Aciertos: <strong id="aprende-hits">0 de 0</strong></div>
+            </div>
+
+            <div id="view-retos" class="view-panel">
+                <h2>🏆 Retos y pegatinas</h2>
+                <p class="lesson">Cumple retos jugando y llena tu álbum. Pegatinas: <strong id="album-count">0 de 9</strong></p>
+                <div class="album" id="album"></div>
+                <button class="btn-small" id="btn-borrar">🗑️ Borrar mi álbum</button>
+            </div>
+
+            <div id="view-juegos" class="view-panel">
+                <h2>🎮 Más Minijuegos</h2>
+                <p>Próximamente: El Tren Mágico y Atrapa el Globo.</p>
+            </div>
+
+        </section>
+    </main>
+</div>
+<div id="toast" class="toast" aria-live="polite"></div>
+<script src="script.js"></script>
+</body>
+</html>
